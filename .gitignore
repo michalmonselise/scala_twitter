@@ -16,3 +16,4 @@ src_managed/
 project/project
 .scala_dependencies
 .worksheet
+*.conf

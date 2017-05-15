@@ -13,30 +13,25 @@ import akka.stream.ActorMaterializer
 import com.hunorkovacs.koauth.domain.KoauthRequest
 import com.hunorkovacs.koauth.service.consumer.DefaultConsumerService
 import com.typesafe.config.ConfigFactory
-import org.jfree.chart.plot.{FastScatterPlot, PlotOrientation}
+import org.jfree.chart.plot.PlotOrientation
 import org.jfree.chart.{ChartFactory, ChartPanel, JFreeChart}
 import org.jfree.data.xy.XYSeriesCollection
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
 import org.json4s._
 import org.json4s.native.JsonMethods._
 import org.sameersingh.scalaplot.Implicits._
-import org.sameersingh.scalaplot.{XYChart, XYPlotStyle}
 import org.sameersingh.scalaplot.jfreegraph.JFGraphPlotter
+import org.sameersingh.scalaplot.{XYChart, XYPlotStyle}
 
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.util.{Failure, Success, Try}
 
 object TwitterStreamer extends App {
 
   val conf = ConfigFactory.load()
 
   //Get your credentials from https://apps.twitter.com and replace the values below
-  private val consumerKey = "H5n7EhpmyX7gMtwYFfGtU0NGo"
-  private val consumerSecret = "Erfk0Is29vseSBy0SETJRWcin8rnS0TpLbYxEz8H3dFYTKkwl0"
-  private val accessToken = "14311701-kHi0uAs9VLHfmbf9ITZpA4yrTfT57XqdqXXTdwUBC"
-  private val accessTokenSecret = "S1mkQCiye1Anc8f6duMIh2kRk5gdb1wwTG3Kgaow9ZFTA"
   private val url = "https://stream.twitter.com/1.1/statuses/filter.json"
 
   implicit val system = ActorSystem()
@@ -45,9 +40,7 @@ object TwitterStreamer extends App {
 
   private val consumer = new DefaultConsumerService(system.dispatcher)
 
-  //Filter tweets by a term "london"
   //Location boundary box for the united states
-//	val body = "locations=-74,40,-73,41"
   val body = "locations=-124.848974,24.396308,-66.885444,49.384358"
   val source = Uri(url)
 
@@ -59,10 +52,10 @@ object TwitterStreamer extends App {
       authorizationHeader = None,
       body = Some(body)
     ),
-    consumerKey,
-    consumerSecret,
-    accessToken,
-    accessTokenSecret
+    conf.getString("consumerKey"),
+    conf.getString("consumerSecret"),
+    conf.getString("accessToken"),
+    conf.getString("accessTokenSecret")
   ) map (_.header)
 
   var longitudes: ListBuffer[Double] = new ListBuffer[Double]()
