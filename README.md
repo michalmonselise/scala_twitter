@@ -1,11 +1,3 @@
-# akka-sample-twitter-streaming
+#Scala twitter 
 
-This is a working example of Twitter Streaming API client application using `akka-http` and `akka-stream`.
-
-## Usage
-
-You have to put your Twitter App credentials in `TwitterStreamer.scala` 
-
-Running:
-
-```sbt run```
+This uses the akka Twitter example and will store the data in HBase, analyze using Spark and plot using geotrellis.
